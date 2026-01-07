@@ -77,8 +77,7 @@ class SentientTextField extends StatefulWidget {
 class _SentientTextFieldState extends State<SentientTextField> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   //late Animation<double> _animation;
-  late CurvedAnimation _animatedIndentHeight;
-
+  late Animation _animatedIndentHeightTextBox;
   bool isSelected = false;
 
   void textBoxEngade(bool val) {
@@ -96,11 +95,12 @@ class _SentientTextFieldState extends State<SentientTextField> with SingleTicker
   @override
   void initState() {
     // ANIMATION
-    _animationController = AnimationController(duration: Duration(milliseconds: 150), vsync: this);
+    _animationController = AnimationController(duration: Duration(milliseconds: 450), vsync: this);
 
     // _animation = Tween<double>(begin: 0, end: widget.indentHeight).animate(_animationController);
 
-    _animatedIndentHeight = CurvedAnimation(parent: _animationController, curve: Easing.emphasizedAccelerate);
+    _animatedIndentHeightTextBox = Tween<double>(begin: 0, end: widget.indentHeight).animate(CurvedAnimation(parent: _animationController, curve: Curves.elasticInOut));
+
     // setState(() {
     //   if (widget.controller.text.isEmpty) {
     //     indentHeight = 0;
@@ -118,57 +118,55 @@ class _SentientTextFieldState extends State<SentientTextField> with SingleTicker
       animation: _animationController,
       builder: (context, child) {
         return Container(
-          height: widget.size.height + (_animatedIndentHeight.value * widget.indentHeight),
-          width: widget.size.width,
+          constraints: BoxConstraints(minHeight: widget.size.height + widget.indentHeight),
           child: Stack(
             children: [
-              CustomPaint(
-                size: Size(widget.size.width, widget.size.height + (_animatedIndentHeight.value * widget.indentHeight)),
-                painter: TextBoxPainter(widget.cornerRadius, 14, widget.indentWidth, (_animatedIndentHeight.value * widget.indentHeight), 12, widget.indentCornerRadius, widget.backgroundColor),
+              Padding(
+                padding: EdgeInsets.only(left: (widget.cornerRadius / 2) + (widget.indentCornerRadius * 2) + 14),
+                child: AnimatedOpacity(
+                  duration: Duration(milliseconds: 500),
+                  opacity: isSelected ? 1 : 0,
+                  child: Text(
+                    widget.label,
+                    style: TextStyle(fontSize: widget.labelFontSize, fontWeight: FontWeight.bold, color: widget.labelColor),
+                  ),
+                ),
               ),
 
-              Column(
-                children: [
-                  Container(height: _animatedIndentHeight.value * widget.indentHeight),
-                  Expanded(
+              CustomPaint(
+                size: Size(widget.size.width, widget.size.height + _animatedIndentHeightTextBox.value),
+                painter: TextBoxPainter(widget.cornerRadius, 14, widget.indentWidth, (_animatedIndentHeightTextBox.value), 12, widget.indentCornerRadius, widget.backgroundColor),
+              ),
+
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 150),
+                top: isSelected ? widget.indentHeight + 8 : 8,
+                left: 8,
+                curve: Curves.bounceInOut,
+                child: Container(
+                  height: widget.size.height - 16,
+                  width: widget.size.width - 16,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: widget.textBoxColor),
+                  child: Center(
                     child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Container(
-                        //height: double.infinity,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: widget.textBoxColor),
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12),
-                            child: TextField(
-                              controller: widget.controller,
-                              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: widget.textColor),
-                              onChanged: (value) {
-                                setState(() {
-                                  textBoxEngade(widget.controller.text.isEmpty);
-                                });
-                              },
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hint: Text(
-                                  widget.hint,
-                                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: widget.hintColor),
-                                ),
-                              ),
-                            ),
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: TextField(
+                        controller: widget.controller,
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: widget.textColor),
+                        onChanged: (value) {
+                          setState(() {
+                            textBoxEngade(widget.controller.text.isEmpty);
+                          });
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hint: Text(
+                            widget.hint,
+                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: widget.hintColor),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: (widget.cornerRadius / 2) + (widget.indentCornerRadius * 2) + 14),
-                child: Visibility(
-                  visible: isSelected,
-                  child: Text(
-                    widget.label,
-                    style: TextStyle(fontSize: widget.labelFontSize, fontWeight: FontWeight.bold, color: widget.labelColor),
                   ),
                 ),
               ),
