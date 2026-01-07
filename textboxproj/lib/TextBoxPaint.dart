@@ -118,47 +118,49 @@ class _SentientTextFieldState extends State<SentientTextField> with SingleTicker
       animation: _animationController,
       builder: (context, child) {
         return Container(
-          height: widget.size.height,
+          height: widget.size.height + (_animatedIndentHeight.value * widget.indentHeight),
           width: widget.size.width,
           child: Stack(
             children: [
               CustomPaint(
-                size: widget.size,
+                size: Size(widget.size.width, widget.size.height + (_animatedIndentHeight.value * widget.indentHeight)),
                 painter: TextBoxPainter(widget.cornerRadius, 14, widget.indentWidth, (_animatedIndentHeight.value * widget.indentHeight), 12, widget.indentCornerRadius, widget.backgroundColor),
               ),
 
-              Padding(
-                padding: EdgeInsets.only(
-                  top: (_animatedIndentHeight.value * widget.indentHeight) + 8,
-                  left: ((_animatedIndentHeight.value * widget.indentHeight) / 2) + 8,
-                  right: ((_animatedIndentHeight.value * widget.indentHeight) / 2) + 8,
-                  bottom: 8,
-                ),
-                child: Container(
-                  height: double.infinity,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: widget.textBoxColor),
-                  child: Center(
+              Column(
+                children: [
+                  Container(height: _animatedIndentHeight.value * widget.indentHeight),
+                  Expanded(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: TextField(
-                        controller: widget.controller,
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: widget.textColor),
-                        onChanged: (value) {
-                          setState(() {
-                            textBoxEngade(widget.controller.text.isEmpty);
-                          });
-                        },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hint: Text(
-                            widget.hint,
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: widget.hintColor),
+                      padding: EdgeInsets.all(8),
+                      child: Container(
+                        //height: double.infinity,
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: widget.textBoxColor),
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12),
+                            child: TextField(
+                              controller: widget.controller,
+                              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: widget.textColor),
+                              onChanged: (value) {
+                                setState(() {
+                                  textBoxEngade(widget.controller.text.isEmpty);
+                                });
+                              },
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hint: Text(
+                                  widget.hint,
+                                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: widget.hintColor),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
               Padding(
                 padding: EdgeInsets.only(left: (widget.cornerRadius / 2) + (widget.indentCornerRadius * 2) + 14),

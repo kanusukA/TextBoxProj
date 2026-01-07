@@ -44,18 +44,32 @@ Path TextBoxPath(Size size, double cornerRadius, double _indentSpaceFromStart, d
 
   var indentSpaceFromStart = (cornerRadius / 2) + _indentSpaceFromStart;
 
-  path.moveTo(cornerRadius / 2, size.height);
+  path.moveTo(cornerRadius / 2, 0);
 
   // Top Start ARC
-  path.arcTo(Rect.fromPoints(Offset.zero, Offset(cornerRadius, cornerRadius)), math.pi / 2, math.pi, false);
+  // path.arcTo(Rect.fromPoints(Offset.zero, Offset(cornerRadius, cornerRadius)), math.pi / 2, math.pi, false);
 
   path.lineTo(indentSpaceFromStart, 0);
 
-  path.cubicTo(indentSpaceFromStart + indentCornerRadius, 0, (indentSpaceFromStart + (indentCornerSize * 2)) - indentCornerRadius, indentHeight, indentSpaceFromStart + (indentCornerSize * 2), indentHeight);
+  path.cubicTo(
+    indentSpaceFromStart + indentCornerRadius,
+    0,
+    (indentSpaceFromStart + (indentCornerSize * 2)) - indentCornerRadius,
+    indentHeight,
+    indentSpaceFromStart + (indentCornerSize * 2),
+    indentHeight,
+  );
 
   path.lineTo(indentWidth + indentSpaceFromStart + (indentCornerSize * 2), indentHeight);
 
-  path.cubicTo(indentSpaceFromStart + (indentCornerSize * 2) + indentWidth + indentCornerRadius, indentHeight, (indentSpaceFromStart + indentWidth + (indentCornerSize * 4)) - indentCornerRadius, 0, indentSpaceFromStart + (indentCornerSize * 4) + indentWidth, 0);
+  path.cubicTo(
+    indentSpaceFromStart + (indentCornerSize * 2) + indentWidth + indentCornerRadius,
+    indentHeight,
+    (indentSpaceFromStart + indentWidth + (indentCornerSize * 4)) - indentCornerRadius,
+    0,
+    indentSpaceFromStart + (indentCornerSize * 4) + indentWidth,
+    0,
+  );
 
   path.lineTo(size.width - cornerRadius / 2, 0);
 
@@ -63,6 +77,10 @@ Path TextBoxPath(Size size, double cornerRadius, double _indentSpaceFromStart, d
   path.arcTo(Rect.fromPoints(Offset(size.width - cornerRadius, 0), Offset(size.width, size.height)), -(math.pi / 2), math.pi, false);
 
   path.lineTo(cornerRadius / 2, size.height);
+
+  path.arcTo(Rect.fromPoints(Offset.zero, Offset(cornerRadius, size.height)), math.pi / 2, math.pi, false);
+
+  path.close();
 
   return path;
 }
