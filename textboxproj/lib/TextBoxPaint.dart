@@ -1,5 +1,5 @@
+import 'package:espy/Views/Components/SubModules/textboxproj/lib/boxPainter.dart';
 import 'package:flutter/material.dart';
-import 'package:textboxproj/boxPainter.dart';
 
 class MyTextBox extends StatelessWidget {
   const MyTextBox({super.key});
