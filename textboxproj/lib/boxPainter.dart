@@ -9,8 +9,20 @@ class TextBoxPainter extends CustomPainter {
   double indentCornerSize = 0;
   double indentCornerRadius = 0;
   Color color = Colors.deepPurple;
+  String? text;
+  TextStyle? style;
 
-  TextBoxPainter(double cornerRadius_p, double indentSpaceFromStart_p, double indentWidth_p, double indentHeight_p, double indentCornerSize_p, double indentCornerRadius_p, Color col) {
+  TextBoxPainter(
+    double cornerRadius_p,
+    double indentSpaceFromStart_p,
+    double indentWidth_p,
+    double indentHeight_p,
+    double indentCornerSize_p,
+    double indentCornerRadius_p,
+    Color col,
+    String? text_p,
+    TextStyle? style_p,
+  ) {
     cornerRadius = cornerRadius_p;
     indentSpaceFromStart = indentSpaceFromStart_p;
     indentWidth = indentWidth_p;
@@ -18,13 +30,15 @@ class TextBoxPainter extends CustomPainter {
     indentCornerSize = indentCornerSize_p;
     indentCornerRadius = indentCornerRadius_p;
     color = col;
+    text = text_p;
+    style = style_p;
   }
 
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
 
-    paint.style = PaintingStyle.fill;
+    paint.style = PaintingStyle.stroke;
     paint.strokeWidth = 4;
     paint.color = color;
 
@@ -74,11 +88,15 @@ Path TextBoxPath(Size size, double cornerRadius, double _indentSpaceFromStart, d
   path.lineTo(size.width - cornerRadius / 2, 0);
 
   // // Top End Arc
-  path.arcTo(Rect.fromPoints(Offset(size.width - cornerRadius, 0), Offset(size.width, size.height)), -(math.pi / 2), math.pi, false);
+  path.arcTo(Rect.fromPoints(Offset(size.width - cornerRadius, 0), Offset(size.width, cornerRadius)), -(math.pi / 2), math.pi / 2, false);
+
+  path.arcTo(Rect.fromPoints(Offset(size.width - cornerRadius, size.height - cornerRadius), Offset(size.width, size.height)), math.pi * 2, math.pi / 2, false);
 
   path.lineTo(cornerRadius / 2, size.height);
 
-  path.arcTo(Rect.fromPoints(Offset.zero, Offset(cornerRadius, size.height)), math.pi / 2, math.pi, false);
+  path.arcTo(Rect.fromPoints(Offset(0, size.height - cornerRadius), Offset(cornerRadius, size.height)), math.pi / 2, math.pi / 2, false);
+
+  path.arcTo(Rect.fromPoints(Offset.zero, Offset(cornerRadius, cornerRadius)), math.pi, math.pi / 2, false);
 
   path.close();
 
